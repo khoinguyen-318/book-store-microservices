@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: CART-SERVICES
+  data:
+    mongodb:
+      authentication-database: admin
+      database: cart-services
+      host: localhost
+      port: 27019
+      username: root
+      password: password
+      auto-index-creation: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+server:
+  port: 0
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka

@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: Category-services
+  data:
+    mongodb:
+      authentication-database: admin
+      database: category-services
+      host: localhost
+      port: 27017
+      username: root
+      password: password
+      auto-index-creation: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+server:
+  port: 0
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+

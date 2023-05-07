@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: CLOUD-GATEWAY
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+server:
+  port: 8888

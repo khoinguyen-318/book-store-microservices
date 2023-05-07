@@ -1,0 +1,112 @@
+version: "3.8"
+services:
+  mongo-category-services:
+    container_name: mongo-category
+    image: mongo:latest
+    restart: on-failure
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: category-services
+
+  mongo-express-category-services:
+    container_name: mongo-express-category
+    image: mongo-express
+    restart: always
+    depends_on:
+      - mongo-category-services
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: password
+      ME_CONFIG_MONGODB_SERVER: mongo-category-services
+  mongo-book-services:
+    container_name: mongo-book
+    image: mongo:latest
+    restart: on-failure
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: book-services
+
+  mongo-express-book-services:
+    container_name: mongo-express-book
+    image: mongo-express
+    restart: always
+    depends_on:
+      - mongo-book-services
+    ports:
+      - "8082:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: password
+      ME_CONFIG_MONGODB_SERVER: mongo-book-services
+  mongo-cart-services:
+    container_name: mongo-cart
+    image: mongo:latest
+    restart: always
+    ports:
+      - "27019:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: cart-services
+
+  mongo-express-cart-services:
+    container_name: mongo-express-cart
+    image: mongo-express
+    restart: always
+    ports:
+      - "8083:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: password
+      ME_CONFIG_MONGODB_SERVER: mongo-cart-services
+  axonserver:
+    image: axoniq/axonserver:latest-dev
+    hostname: axonserver
+    volumes:
+      - axonserver-data:/axonserver/data
+      - axonserver-events:/axonserver/events
+      - axonserver-plugins:/axonserver/plugins
+      - axonserver-config:/axonserver/config:ro
+    ports:
+      - '8024:8024'
+      - '8124:8124'
+      - '8224:8224'
+    networks:
+      - axon-demo
+
+volumes:
+  axonserver-data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${PWD}/axon/data
+  axonserver-events:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${PWD}/axon/events
+  axonserver-plugins:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${PWD}/axon/plugins
+  axonserver-config:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${PWD}/axon/config
+
+networks:
+  axon-demo:
