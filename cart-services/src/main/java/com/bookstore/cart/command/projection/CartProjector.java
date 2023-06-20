@@ -152,7 +152,7 @@ public class CartProjector {
     }
     @QueryHandler
     public Cart handle(FindAllItemInCart query){
-        return this.mongoTemplate.findById(query.getCartId(),Cart.class);
+        return this.mongoTemplate.findOne(new Query(Criteria.where("customerId").is(query.getCustomerId())),Cart.class);
     }
     private BigDecimal calculateTotalPrice(Set<Item> items){
         BigDecimal price = BigDecimal.ZERO;

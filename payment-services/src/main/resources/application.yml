@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: Payment-services
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: user
+    password: password
+    url: jdbc:postgresql://localhost:5432/payment
+  jpa:
+    hibernate:
+      ddl-auto: update
+server:
+  port: 0
+paypal:
+  clientId: AeMaE86qgSOaN1bAsONyZFD03_TGEHd5vmSY5ESXThrD9xznhUoIsKX1D4rzW-EdwLPJxI3J9TNocdtw
+  secret: EOTCPHFIJy5e8JN2cmrVTRRyT02hchF4f6Yk-jB8ret03LGlDBugpESWV4IacHPXkwfwfuZUiLZ7SHhh
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka

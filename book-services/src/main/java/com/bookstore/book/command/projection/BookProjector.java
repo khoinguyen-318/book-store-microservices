@@ -93,7 +93,7 @@ public class BookProjector {
     }
     @QueryHandler
     public Book handle(FindBookById book){
-        return mongoTemplate.findById(book.getBookId(),Book.class);
+        return this.mongoTemplate.findById(book.getBookId(),Book.class,"book");
     }
     @QueryHandler
     public List<Book> handle(FindAllBookByCategory book){

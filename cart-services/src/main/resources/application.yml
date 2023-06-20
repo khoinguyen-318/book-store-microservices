@@ -6,7 +6,7 @@ spring:
       authentication-database: admin
       database: cart-services
       host: localhost
-      port: 27019
+      port: 27017
       username: root
       password: password
       auto-index-creation: true

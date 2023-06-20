@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: Shipment-services
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: user
+    password: password
+    url: jdbc:postgresql://localhost:5432/shipment
+  jpa:
+    hibernate:
+      ddl-auto: update
+server:
+  port: 0
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka

@@ -40,41 +40,53 @@ public class CartCommandServices implements ICartCommandServices {
     @CachePut
     public CompletableFuture<Cart> addToCart(ItemDto book) throws ExecutionException, InterruptedException {
         log.info("Book will add to cart info [{}]", book);
-        //Check if cart is exist
-        final Optional<Cart> cartExist = getCartExist(book.customerId(), null);
-
         final BookResponse getBookFromBookServices = getBookFromServices(book.bookId()).get();
         if (Objects.isNull(getBookFromBookServices)) {
             throw new RuntimeException("Book id = " + book.bookId() + " not found!");
         }
+        //Check if cart is exist
+        final Optional<Cart> cartExist = getCartExist(book.customerId(), "");
+
         if (cartExist.isEmpty()) {
             createCart(book)
                     .thenApply(cartId->
-                            this.commandGateway.send(new AddBookToCartCommand(
+                    {
+                        try {
+                            return this.commandGateway.send(new AddBookToCartCommand(
                             cartId,
                             book.customerId(),
                             book.bookId(),
                             getBookFromBookServices.price(),
                             book.quantity() == null ? 1 : book.quantity()
-                    ))).get();
+                    )).get();
+                        } catch (InterruptedException | ExecutionException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }).get();
+
         }
-        // if exist item in cart -> increase quantity + 1
-        if (cartExist.get().getItems().stream().anyMatch(item -> item.getBookId().equalsIgnoreCase(book.bookId()))) {
-            log.info("Book is exist in cart ==> update quantity");
-            return this.commandGateway.send(new IncrementBookCommand(
-                    cartExist.get().getId(),
-                    book.bookId(),
-                    book.quantity() == null ? 1 : book.quantity(),
-                    getBookFromBookServices.price()
-            ));
+        else {
+            // if exist item in cart -> increase quantity + 1
+            if (cartExist.get().getItems().stream().anyMatch(item -> item.getBookId().equalsIgnoreCase(book.bookId()))) {
+                log.info("Book is exist in cart ==> update quantity");
+                return this.commandGateway.send(new IncrementBookCommand(
+                        cartExist.get().getId(),
+                        book.bookId(),
+                        book.quantity() == null ? 1 : book.quantity(),
+                        getBookFromBookServices.price()
+                ));
+            }
+            else {
+                return this.commandGateway.send(new AddBookToCartCommand(
+                        cartExist.get().getId(),
+                        book.customerId(),
+                        book.bookId(),
+                        getBookFromBookServices.price(),
+                        book.quantity() == null ? 1 : book.quantity()
+                ));
+            }
         }
-        return this.commandGateway.send(new AddBookToCartCommand(
-                cartExist.get().getId(),
-                book.customerId(),
-                book.bookId(),
-                getBookFromBookServices.price(),
-                book.quantity() == null ? 1 : book.quantity()
-        ));
+        return CompletableFuture.completedFuture(null);
     }
 
     @Override

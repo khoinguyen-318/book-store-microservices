@@ -17,8 +17,8 @@ import java.util.concurrent.CompletableFuture;
 public class CartQueryController {
     private final ICartQueryServices services;
 
-    @GetMapping("/{cartId}")
-    public CompletableFuture<Cart> getAllItemInCart(@PathVariable String cartId){
-        return this.services.getAllItemInCart(cartId);
+    @GetMapping("/{customerId}")
+    public CompletableFuture<Cart> getAllItemInCart(@PathVariable String customerId){
+        return this.services.getAllItemInCart(customerId);
     }
 }

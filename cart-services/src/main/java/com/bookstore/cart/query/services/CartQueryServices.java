@@ -21,8 +21,8 @@ public class CartQueryServices implements ICartQueryServices{
 
     @Override
     @Cacheable
-    public CompletableFuture<Cart> getAllItemInCart(String cartId) {
-        return this.queryGateway.query(new FindAllItemInCart(cartId),
+    public CompletableFuture<Cart> getAllItemInCart(String customerId) {
+        return this.queryGateway.query(new FindAllItemInCart(customerId),
                 ResponseTypes.instanceOf(Cart.class));
     }
 }

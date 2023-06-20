@@ -13,6 +13,11 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8011/realms/owen-book-store
 server:
   port: 0
 eureka:

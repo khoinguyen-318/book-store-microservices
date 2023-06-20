@@ -37,7 +37,6 @@ import static org.springframework.util.Assert.notNull;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "books")
 public class BookCommandServices implements IBookCommandServices {
     private final CommandGateway commandGateway;
     private final WebClient webClient;
@@ -45,7 +44,6 @@ public class BookCommandServices implements IBookCommandServices {
     private final ObjectMapper objectMapper;
     private final MongoTemplate template;
     @Override
-    @CachePut
     public CompletableFuture<Book> createBook(String data, MultipartFile[] files) throws ExecutionException, InterruptedException {
 
         BookDto book = this.parseStringJsonToObject(data).get();
@@ -71,12 +69,11 @@ public class BookCommandServices implements IBookCommandServices {
                 book.publicationDate(),
                 Instant.now(),
                 "Admin",
-                true
+                book.activated()
         ));
     }
 
     @Override
-    @CacheEvict(key = "#bookId")
     public CompletableFuture<Void> deleteBookById(String bookId) {
         notNull(bookId,"Book need to deleted not null");
         log.info("Delete book id = [{}]",bookId);
@@ -88,7 +85,6 @@ public class BookCommandServices implements IBookCommandServices {
     }
 
     @Override
-    @Caching(evict = @CacheEvict(key = "#bookId"),put = @CachePut)
     public CompletableFuture<Book> updateBook(String bookId, String data, MultipartFile[] files) throws ExecutionException, InterruptedException {
         notNull(bookId,"Book need to update not null");
         log.info("Update book id = [{}]",bookId);
@@ -117,7 +113,7 @@ public class BookCommandServices implements IBookCommandServices {
                 book.publicationDate(),
                 Instant.now(),
                 "Admin",
-                true
+                book.activated()
         ));
     }
 
@@ -125,7 +121,7 @@ public class BookCommandServices implements IBookCommandServices {
     CompletableFuture<Boolean> getCategoryFromCategoryServices(String categoryId){
         log.info("Thread- {} -doing get category!",Thread.currentThread().getName());
         return CompletableFuture.supplyAsync(() -> {
-            final CategoryResponse category_is_present = this.webClient.get()
+            final CategoryResponse categoryIsPresent = this.webClient.get()
                     .uri("http://localhost:8888/api/v1/category/{categoryId}", categoryId)
                     .retrieve()
                     .onStatus(HttpStatus::isError,
@@ -136,7 +132,7 @@ public class BookCommandServices implements IBookCommandServices {
                         return Mono.empty();
                     })
                     .block();
-            return category_is_present != null;
+            return categoryIsPresent != null;
         });
     }
     @Async
@@ -159,11 +155,11 @@ public class BookCommandServices implements IBookCommandServices {
         });
     }
     @Async
-    CompletableFuture<BookDto> parseStringJsonToObject(String value){
+    public CompletableFuture<BookDto> parseStringJsonToObject(String value){
         log.info("Thread- {} -convert string Json!",Thread.currentThread().getName());
         return CompletableFuture.supplyAsync(()->{
             try {
-                return this.objectMapper.readValue(value,BookDto.class);
+                return this.objectMapper.readValue(value, BookDto.class);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }

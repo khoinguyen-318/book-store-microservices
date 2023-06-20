@@ -5,7 +5,12 @@
     <file url="file://$PROJECT_DIR$/cart-services/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/category-services/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/cloud-gateway/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/common-services/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/eureka-discovery-server/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/order-services/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/order-services/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/payment-services/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shipment-services/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
   </component>

@@ -13,6 +13,8 @@ public class RouterLocator {
                 .route("Category-services",r->r.path("/api/v1/category/**").uri("lb://Category-services"))
                 .route("Book-services",r->r.path("/api/v1/books/**").uri("lb://Book-services"))
                 .route("Cart-services",r->r.path("/api/v1/cart/**").uri("lb://Cart-services"))
+                .route("Order-services",r->r.path("/api/v1/orders/**").uri("lb://Order-services"))
+                .route("Payment-services",r->r.path("/api/v1/payment/**").uri("lb://Payment-services"))
                 .build();
     }
 }

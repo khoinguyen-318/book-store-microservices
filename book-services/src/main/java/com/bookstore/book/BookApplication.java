@@ -14,8 +14,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableEurekaClient
-@EnableCaching
-@EnableScheduling
 public class BookApplication {
     public static void main(String[] args) {
         Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
