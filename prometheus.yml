@@ -1,0 +1,36 @@
+scrape_configs:
+  - job_name: 'microservice-book'
+    scrape_interval: 5s
+    metrics_path: '/actuator/prometheus' ##prometheus endpoint
+    static_configs:
+      - targets: ['host.docker.internal:250'] ## host and port for your mis
+  - job_name: 'microservice-cart'
+    scrape_interval: 5s
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:251']
+  - job_name: 'microservice-category'
+    scrape_interval: 5s
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: [ 'host.docker.internal:252' ]
+  - job_name: 'microservice-gateway'
+    scrape_interval: 5s
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: [ 'host.docker.internal:8888' ]
+  - job_name: 'microservice-eureka'
+    scrape_interval: 5s
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: [ 'host.docker.internal:8761' ]
+  - job_name: 'microservice-payment'
+    scrape_interval: 5s
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: [ 'host.docker.internal:254' ]
+  - job_name: 'microservice-shipment'
+    scrape_interval: 5s
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: [ 'host.docker.internal:255' ]
