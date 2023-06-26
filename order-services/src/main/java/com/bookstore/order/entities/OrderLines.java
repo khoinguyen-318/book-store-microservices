@@ -1,5 +1,6 @@
 package com.bookstore.order.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,7 @@ public class OrderLines {
     private BigDecimal price;
     @ManyToOne
     @JoinColumn(name = "order_id",nullable = false)
+    @JsonIgnore
     private Order order;
 
     public OrderLines(String bookId, Integer quantity, BigDecimal price) {

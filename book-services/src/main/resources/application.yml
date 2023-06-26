@@ -1,6 +1,11 @@
 spring:
   application:
     name: Book-services
+  zipkin:
+    base-url: http://localhost:9411
+  sleuth:
+    sampler:
+      probability: 1.0
   data:
     mongodb:
       authentication-database: admin
@@ -18,8 +23,22 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: http://localhost:8011/realms/owen-book-store
+management:
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
 server:
-  port: 0
+  port: 250
 eureka:
   client:
     serviceUrl:

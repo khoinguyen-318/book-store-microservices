@@ -1,6 +1,7 @@
 package com.bookstore.order.entities;
 
 import com.bookstore.coreapis.enumaration.OrderStatus;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +25,8 @@ public class Order {
     private String customerId;
     private String address;
     private String phone;
-    @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @JsonBackReference
     private Set<OrderLines> orderLines;
     @Enumerated(EnumType.STRING)
     private OrderStatus status;

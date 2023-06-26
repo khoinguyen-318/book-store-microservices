@@ -13,7 +13,10 @@ public class ShipCommandController {
     private final IShipServices shipServices;
 
     @PatchMapping("/{orderId}")
-    public CompletableFuture<Object> handlerShipment(@PathVariable String orderId){
-        return this.shipServices.handlerShipment(orderId);
+    public CompletableFuture<Object> updateStatusShipment(@PathVariable String orderId,
+                                                     @RequestBody String status){
+        return this.shipServices.handlerShipment(orderId,status);
     }
+
+
 }

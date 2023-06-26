@@ -34,7 +34,7 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: user-services
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - ./postgres:/var/lib/postgresql/data
   keycloak:
     image: docker.io/bitnami/keycloak:21
     ports:
@@ -59,6 +59,27 @@ services:
       PGADMIN_DEFAULT_PASSWORD: password
 #    volumes:
 #      - pgadmin-data:/var/lib/pgadmin
+  zipkin:
+    image: openzipkin/zipkin-slim
+    container_name: zipkin
+    restart: always
+    ports:
+      - "9411:9411"
+  prometheus:
+    image: prom/prometheus
+    restart: on-failure
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    restart: on-failure
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana_data:/var/lib/grafana
   axonserver:
     image: axoniq/axonserver:latest-dev
     hostname: axonserver
@@ -75,11 +96,6 @@ services:
       - axon-demo
 
 volumes:
-  postgres:
-    driver_opts:
-      o: bind
-      type: none
-      device: ${PWD}/postgres/data
   axonserver-data:
     driver: local
     driver_opts:

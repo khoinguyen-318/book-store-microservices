@@ -59,8 +59,6 @@ public class PaymentAggregate {
     }
     @EventSourcingHandler
     public void on(PaymentProcessedEvent event){
-//        this.paymentId = event.getPaymentId();
-        this.orderId = event.getOrderId();
         this.state = event.getState();
         this.paymentMethod = PaymentMethod.PAYPAL;
     }

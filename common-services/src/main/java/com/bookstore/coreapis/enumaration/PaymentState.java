@@ -2,6 +2,7 @@ package com.bookstore.coreapis.enumaration;
 
 public enum PaymentState {
     CREATED,
-    COMPLETED,
+    PAID,
+    NOT_PAID,
     FAILED
 }

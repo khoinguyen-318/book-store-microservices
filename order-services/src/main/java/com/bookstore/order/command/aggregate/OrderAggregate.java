@@ -3,11 +3,13 @@ package com.bookstore.order.command.aggregate;
 import com.bookstore.coreapis.command.CancelOrderCommand;
 import com.bookstore.coreapis.command.CompleteOrderCommand;
 import com.bookstore.coreapis.command.CreateOrderCommand;
+import com.bookstore.coreapis.command.UpdateStatusCommand;
 import com.bookstore.coreapis.enumaration.OrderStatus;
 import com.bookstore.coreapis.enumaration.PaymentMethod;
 import com.bookstore.coreapis.event.OrderCancelledEvent;
 import com.bookstore.coreapis.event.OrderCompletedEvent;
 import com.bookstore.coreapis.event.OrderCreatedEvent;
+import com.bookstore.coreapis.event.OrderStatusUpdated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -81,6 +83,18 @@ public class OrderAggregate {
     }
     @EventSourcingHandler
     public void on(OrderCompletedEvent event){
+        this.status = event.getStatus();
+    }
+
+    @CommandHandler
+    public void handle(UpdateStatusCommand command){
+        AggregateLifecycle.apply(new OrderStatusUpdated(
+                command.getOrderId(),
+                command.getStatus()
+        ));
+    }
+    @EventSourcingHandler
+    public void on(OrderStatusUpdated event){
         this.status = event.getStatus();
     }
 }

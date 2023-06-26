@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequiredArgsConstructor
@@ -15,11 +16,12 @@ public class OrderCommandController {
     private final IOrderCommandServices services;
 
     @PostMapping
-    public CompletableFuture<Object> createOrder(@RequestBody OrderDto order){
+    public CompletableFuture<Object> createOrder(@RequestBody OrderDto order) throws ExecutionException, InterruptedException {
         return this.services.createOrder(order);
     }
-//    @PatchMapping("/{orderId}")
-//    public CompletableFuture<Order> updateStatus(@PathVariable String orderId,){
-//
-//    }
+    @PatchMapping("/{orderId}")
+    public CompletableFuture<Order> updateStatus(@PathVariable String orderId,
+                                                 @RequestBody String status){
+        return this.services.updateStatus(orderId,status);
+    }
 }

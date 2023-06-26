@@ -1,6 +1,11 @@
 spring:
   application:
     name: Payment-services
+  zipkin:
+    base-url: http://localhost:9411
+  sleuth:
+    sampler:
+      probability: 1.0
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
@@ -13,7 +18,7 @@ spring:
     hibernate:
       ddl-auto: update
 server:
-  port: 0
+  port: 254
 paypal:
   clientId: AeMaE86qgSOaN1bAsONyZFD03_TGEHd5vmSY5ESXThrD9xznhUoIsKX1D4rzW-EdwLPJxI3J9TNocdtw
   secret: EOTCPHFIJy5e8JN2cmrVTRRyT02hchF4f6Yk-jB8ret03LGlDBugpESWV4IacHPXkwfwfuZUiLZ7SHhh
@@ -21,3 +26,17 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka
+management:
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true

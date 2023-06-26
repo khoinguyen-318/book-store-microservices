@@ -21,8 +21,9 @@ public class PaymentController {
     @GetMapping("/{orderId}/success")
     public Object capturePayment(HttpServletRequest request, @PathVariable String orderId){
         final String token = request.getParameter("token");
-        return this.paymentServices.capturePayment(orderId,token);
+        return this.paymentServices.capturePayment(orderId, token);
     }
+
     @GetMapping("/{orderId}/cancel")
     public Object cancelPayment(HttpServletRequest request, @PathVariable String orderId){
         final String token = request.getParameter("token");

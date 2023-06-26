@@ -1,8 +1,10 @@
 package com.bookstore.shipment.command.aggregate;
 
 import com.bookstore.coreapis.command.OrderShipmentCommand;
+import com.bookstore.coreapis.command.UpdateShipmentCommand;
 import com.bookstore.coreapis.enumaration.ShipmentStatus;
 import com.bookstore.coreapis.event.ShipOrderedEvent;
+import com.bookstore.coreapis.event.ShipmentStatusUpdatedEvent;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -34,6 +36,18 @@ public class ShipmentAggregate {
     public void on(ShipOrderedEvent event){
         this.shipId = event.getShipId();
         this.orderId = event.getOrderId();
+        this.state = event.getState();
+    }
+    @CommandHandler
+    public void handle(UpdateShipmentCommand command){
+        AggregateLifecycle.apply(new ShipmentStatusUpdatedEvent(
+                command.getShipmentId(),
+                command.getOrderId(),
+                command.getStatus()
+        ));
+    }
+    @EventSourcingHandler
+    public void on(ShipmentStatusUpdatedEvent event){
         this.state = event.getState();
     }
 }

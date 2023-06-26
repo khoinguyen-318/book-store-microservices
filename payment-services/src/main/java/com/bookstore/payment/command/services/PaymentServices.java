@@ -1,7 +1,6 @@
 package com.bookstore.payment.command.services;
 
 import com.bookstore.coreapis.command.ProcessPaymentCommand;
-import com.bookstore.coreapis.common.StoreToken;
 import com.bookstore.coreapis.enumaration.PaymentState;
 import com.bookstore.payment.command.model.OrderDTO;
 import com.bookstore.payment.command.model.PayPalAppContextDTO;
@@ -23,7 +22,6 @@ import org.springframework.web.client.RestTemplate;
 import java.net.http.HttpClient;
 import java.util.Base64;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @Slf4j
@@ -78,8 +76,8 @@ public class PaymentServices implements IPaymentServices{
 
         HttpHeaders headers = setHeader(accessToken);
         PayPalAppContextDTO context = new PayPalAppContextDTO();
-        context.setReturnUrl("http://localhost:8888/api/v1/payment/"+orderId+"/success");
-        context.setCancelUrl("http://localhost:8888/api/v1/payment/"+orderId+"/cancel");
+        context.setReturnUrl("http://localhost:4300/cart/checkout/payment/"+orderId+"/success");
+        context.setCancelUrl("http://localhost:4300/cart/checkout/payment/"+orderId+"/error");
         orderDTO.setApplicationContext(context);
         //JSON String
         String requestJson = this.objectMapper.writeValueAsString(orderDTO);
@@ -99,6 +97,7 @@ public class PaymentServices implements IPaymentServices{
             return "Unavailable to get CREATE ORDER, STATUS CODE " + response.getStatusCode();
         }
     }
+
     @Override
     public Object capturePayment(String orderId, String token){
         String accessToken = generateAccessToken();
@@ -121,13 +120,13 @@ public class PaymentServices implements IPaymentServices{
                 this.commandGateway.send(new ProcessPaymentCommand(
                    e.getId(),
                    orderId,
-                   PaymentState.COMPLETED
+                   PaymentState.PAID
                 ));
             });
         } else {
             log.error("PAYMENT FAILED");
             final Optional<Payment> payment = this.repository.findByOrderId(orderId);
-            payment.ifPresent(e->{
+            payment.ifPresent(e -> {
                 this.commandGateway.send(new ProcessPaymentCommand(
                         e.getId(),
                         orderId,
@@ -135,22 +134,21 @@ public class PaymentServices implements IPaymentServices{
                 ));
             });
         }
-        return "Payment has been updated";
+        return "Order updated";
     }
     @Override
     public Object cancelPayment(String orderId){
         log.error("PAYMENT FAILED");
         final Optional<Payment> payment = this.repository.findByOrderId(orderId);
-        payment.ifPresent(e->{
+        payment.ifPresent(e -> {
             this.commandGateway.send(new ProcessPaymentCommand(
                     e.getId(),
                     orderId,
                     PaymentState.FAILED
             ));
         });
-        return "Payment has been updated";
+        return "PAYMENT FAILED";
     }
-
     @Override
     public Object updateStatus(String orderId, String status) {
         final Optional<Payment> payment = this.repository.findByOrderId(orderId);

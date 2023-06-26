@@ -5,11 +5,15 @@ import com.bookstore.coreapis.event.PaymentCancelledEvent;
 import com.bookstore.coreapis.event.PaymentProcessedEvent;
 import com.bookstore.payment.entities.Payment;
 import com.bookstore.payment.entities.PaymentRepository;
+import com.bookstore.payment.query.query.FindAllPayment;
+import com.bookstore.payment.query.query.FindOnePayment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.eventhandling.EventHandler;
+import org.axonframework.queryhandling.QueryHandler;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -44,4 +48,17 @@ public class PaymentProjector {
             this.paymentRepository.save(existPayment);
         });
     }
+
+    // Handle for READ
+    @QueryHandler
+    public List<Payment> handle(FindAllPayment query){
+        return this.paymentRepository.findAll();
+    }
+
+    @QueryHandler
+    public Payment handle(FindOnePayment query){
+        return this.paymentRepository.findByOrderId(query.getOrderId())
+                .orElseGet(null);
+    }
+
 }
